@@ -16,6 +16,8 @@ import java.util.List;
 public class ProductRepository {
     private static final String JSON_FILE = "products.json";
 
+    //Todo: create method to insert entity in JSON file
+
     private List<Product> jsonParaList(String arquivoJSON){
         List<Product> result = new ArrayList<>();
         try{
