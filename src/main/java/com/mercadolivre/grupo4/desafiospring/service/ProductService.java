@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProductService {
 
+<<<<<<< Updated upstream
     @Autowired
     private ProductRepository productRepository;
 
+=======
+>>>>>>> Stashed changes
 
 
 }
