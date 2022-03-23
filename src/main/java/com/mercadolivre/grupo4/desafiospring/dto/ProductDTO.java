@@ -25,4 +25,13 @@ public class ProductDTO implements Serializable {
 
         return products.stream().map(product -> new ProductDTO(product)).collect(Collectors.toList());
     }
+
+    @Override
+    public String toString() {
+        return "ProductDTO{" +
+                "productId=" + productId +
+                ", name='" + name + '\'' +
+                ", quantity=" + quantity +
+                '}';
+    }
 }

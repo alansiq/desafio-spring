@@ -5,10 +5,7 @@ import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import com.mercadolivre.grupo4.desafiospring.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,12 +19,12 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping("/api/v1/insert-articles-request")
+    @PostMapping("/api/v1/product")
     public ResponseEntity<List<ProductDTO>> insertProduct(@RequestBody List<Product> listProduct){
 
-//        List<ProductDTO> products = productService.
+        List<ProductDTO> products = productService.save(listProduct);
 
-        return null;
+        return  ResponseEntity.ok(products);
     }
 
 }
