@@ -18,7 +18,11 @@ public class ProductRepository {
 
     //Todo: create method to insert entity in JSON file
 
-    private List<Product> jsonParaList(String arquivoJSON){
+    public List<Product> readAllProducts() {
+        return this.jsonParaList(this.JSON_FILE);
+    }
+
+    public List<Product> jsonParaList(String arquivoJSON){
         List<Product> result = new ArrayList<>();
         try{
             byte[] mapData = Files.readAllBytes(Paths.get(arquivoJSON));
