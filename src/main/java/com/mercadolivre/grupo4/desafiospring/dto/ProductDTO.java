@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Getter
 public class ProductDTO implements Serializable {
 
-    private long productId;
+    private Long productId;
     private String name;
     private int quantity;
 

@@ -11,10 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -80,6 +77,18 @@ public class ProductRepository implements IProductRepository {
             ex.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public Product findById(Long id) {
+        List<Product> allResult = this.get();
+        Optional<Product> result = allResult.stream().filter(product -> product.getProductId().equals(id)).findFirst();
+        if(result.isPresent()){
+            return result.get();
+        }else{
+           return null;
+        }
+
     }
 
 }
