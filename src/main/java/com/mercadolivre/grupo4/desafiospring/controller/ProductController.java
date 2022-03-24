@@ -27,12 +27,6 @@ public class ProductController {
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-  
-//    @GetMapping("/api/v1/products")
-//    public ResponseEntity<List<ProductDTO>> listAllProducts() {
-//        List<ProductDTO> convertedList = ProductDTO.convert(productService.listAllProducts());
-//        return ResponseEntity.status(HttpStatus.OK).body(convertedList);
-//    }
 
     @GetMapping("api/v1/products")
     public ResponseEntity<List<ProductDTO>> listAllProductsFiltered(@RequestParam(required = false) Optional<String> name ,
