@@ -6,14 +6,13 @@ import com.mercadolivre.grupo4.desafiospring.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-
 import java.util.List;
 
 @RestController
@@ -43,5 +42,11 @@ public class ProductController {
         return ResponseEntity.badRequest().build();
     }
 
- 
+
+    @GetMapping(path = "/products/{categoryName}")
+    public ResponseEntity<List<ProductDTO>> findByCategory(@PathVariable String categoryName){
+        List<ProductDTO> result = productService.findByCategory(categoryName);
+        return ResponseEntity.ok(result);
+    }
+
 }

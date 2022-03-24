@@ -13,7 +13,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class ProductRepository implements IProductRepository {
@@ -46,6 +48,14 @@ public class ProductRepository implements IProductRepository {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        return result;
+    }
+
+
+    public List<ProductDTO> findByCategory(String category) {
+        List<Product> allResult = this.get();
+        List<Product> filterResuts = allResult.stream().filter(product -> product.getCategory().equals(category)).collect(Collectors.toList());
+        List<ProductDTO> result = filterResuts.stream().map(product -> new ProductDTO(product)).collect(Collectors.toList());
         return result;
     }
 
