@@ -55,18 +55,16 @@ public class ProductRepository implements IProductRepository {
         return result;
     }
 
-    public List<ProductDTO> orderByName(String order){
+    public List<ProductDTO> orderBy(int order){
         List<Product> allResult = this.get();
-
-        if (order.equals("asc")) {
-            List<Product> orderedAsc = allResult.stream().sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
-            return orderedAsc.stream().map(ProductDTO::new).collect(Collectors.toList());
-        } else {
-            List<Product> orderedDsc = allResult.stream().sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
+        List<Product> ordered = allResult.stream().sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
+        if (order == 1) {
             Comparator<Product> comparator = Comparator.comparing(Product::getName);
-            orderedDsc.sort(comparator.reversed());
-            return orderedDsc.stream().map(ProductDTO::new).collect(Collectors.toList());
+            ordered.sort(comparator.reversed());
+            return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
         }
+
+        return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
     }
 
     @Override

@@ -25,8 +25,8 @@ public class ProductService {
         return productRepository.findByCategory(category);
     }
 
-    public List<ProductDTO> orderByName(String order) {
-        return productRepository.orderByName(order);
+    public List<ProductDTO> orderByName(int order) {
+        return productRepository.orderBy(order);
     }
 
     public boolean save(List<Product> productList) {

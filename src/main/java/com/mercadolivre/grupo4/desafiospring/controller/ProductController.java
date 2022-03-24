@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,8 +46,8 @@ public class ProductController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping("/api/v1/products")
-    public ResponseEntity<List<ProductDTO>> orderByName(@RequestParam String order) {
+    @GetMapping("/api/v1/articles")
+    public ResponseEntity<List<ProductDTO>> orderByName(@RequestParam(value = "order", defaultValue = "asc") Integer order) {
         List<ProductDTO> result = productService.orderByName(order);
         return ResponseEntity.ok(result);
     }
