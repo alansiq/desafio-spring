@@ -6,7 +6,7 @@ import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class ProductService {
     }
 
     public boolean save(List<Product> productList) {
+        // TODO: 24/03/22 Iterar sobre productList e validar todos os campos
         return productRepository.addList(productList);
-
     }
 }

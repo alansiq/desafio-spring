@@ -36,7 +36,7 @@ public class ProductController {
         boolean success = productService.save(productList);
 
         if (success) {
-            return  ResponseEntity.ok().body(ProductDTO.convert(productList));
+            return  ResponseEntity.status(HttpStatus.CREATED).body(ProductDTO.convert(productList));
         }
 
         return ResponseEntity.badRequest().build();
