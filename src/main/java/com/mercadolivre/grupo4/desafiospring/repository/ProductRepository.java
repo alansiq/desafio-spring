@@ -7,13 +7,11 @@ import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import org.springframework.stereotype.Repository;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,7 +49,6 @@ public class ProductRepository implements IProductRepository {
         return result;
     }
 
-
     public List<ProductDTO> findByCategory(String category) {
         List<Product> allResult = this.get();
         List<Product> filterResuts = allResult.stream().filter(product -> product.getCategory().equals(category)).collect(Collectors.toList());
@@ -81,5 +78,4 @@ public class ProductRepository implements IProductRepository {
             return false;
         }
     }
-
 }

@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,21 +30,17 @@ public class ProductController {
     }
 
     @PostMapping("/api/v1/product")
-    public ResponseEntity<List<ProductDTO>> insertProduct(@RequestBody List<Product> productList){
+    public ResponseEntity<List<ProductDTO>> insertProduct(@RequestBody  List<Product> productList){
         boolean success = productService.save(productList);
-
         if (success) {
             return  ResponseEntity.ok().body(ProductDTO.convert(productList));
         }
-
         return ResponseEntity.badRequest().build();
     }
-
 
     @GetMapping(path = "/products/{categoryName}")
     public ResponseEntity<List<ProductDTO>> findByCategory(@PathVariable String categoryName){
         List<ProductDTO> result = productService.findByCategory(categoryName);
         return ResponseEntity.ok(result);
     }
-
 }

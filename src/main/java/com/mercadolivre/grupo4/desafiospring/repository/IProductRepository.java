@@ -10,5 +10,4 @@ public interface IProductRepository {
     boolean addList (List<Product> productList);
     boolean add(Product product);
 
-
 }
