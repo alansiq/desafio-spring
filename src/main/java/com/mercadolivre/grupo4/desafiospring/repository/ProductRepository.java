@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -55,7 +56,7 @@ public class ProductRepository implements IProductRepository {
         return result;
     }
 
-    public List<ProductDTO> orderBy(int order){
+    public List<ProductDTO> orderByName(int order){
         List<Product> allResult = this.get();
         List<Product> ordered = allResult.stream().sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
         if (order == 1) {
@@ -63,9 +64,24 @@ public class ProductRepository implements IProductRepository {
             ordered.sort(comparator.reversed());
             return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
         }
-
         return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
     }
+//.sorted((a, b) -> new BigDecimal(b).compareTo(new BigDecimal(a)))
+//            .collect(Collectors.joining(", ")));
+//    (Product product1, Product product2)-> (int)(product1.getPrice()-product2.getPrice())
+    public List<ProductDTO> orderByPrice(int order){
+        List<Product> allResult = this.get();
+        List<Product> ordered = allResult.stream().sorted((a, b) -> new BigDecimal(b.getPrice()).compareTo(new BigDecimal(a.getPrice())))
+                .collect(Collectors.toList());
+        if (order == 3) {
+            Comparator<Product> comparator = Comparator.comparing(Product::getPrice);
+            ordered.sort(comparator.reversed());
+            return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
+        }
+        return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
+    }
+
+
 
     @Override
     public boolean addList(List<Product> productsToAddList) {
