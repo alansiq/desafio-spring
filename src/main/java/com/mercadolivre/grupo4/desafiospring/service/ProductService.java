@@ -20,8 +20,9 @@ public class ProductService {
         return productRepository.get();
     }
 
-    public List<ProductDTO> findByCategory(String category){
+    public List<ProductDTO> findByCategory(String category) {
         return productRepository.findByCategory(category);
+    }
 
     public boolean save(List<Product> productList) {
         return productRepository.addList(productList);
