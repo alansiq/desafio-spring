@@ -30,13 +30,17 @@ public class ProductController {
     public ResponseEntity<List<ProductDTO>> listAllProducts() {
         List<ProductDTO> convertedList = ProductDTO.convert(productService.listAllProducts());
         return ResponseEntity.status(HttpStatus.OK).body(convertedList);
-
     }
 
     @PostMapping("/api/v1/product")
-    public ResponseEntity<List<ProductDTO>> insertProduct(@RequestBody List<Product> listProduct){
-        List<ProductDTO> products = productService.save(listProduct);
-        return  ResponseEntity.ok(products);
+    public ResponseEntity<List<ProductDTO>> insertProduct(@RequestBody List<Product> productList){
+        boolean success = productService.save(productList);
+
+        if (success) {
+            return  ResponseEntity.ok().body(ProductDTO.convert(productList));
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 
  
