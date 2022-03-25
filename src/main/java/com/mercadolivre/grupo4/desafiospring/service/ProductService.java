@@ -2,6 +2,7 @@ package com.mercadolivre.grupo4.desafiospring.service;
 
 
 import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
+import com.mercadolivre.grupo4.desafiospring.entity.CompraItem;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,5 +96,18 @@ public class ProductService {
         }
 
         return ProductDTO.convert(resultList);
+    }
+
+    public List<Product> returnProductsInStock(List<CompraItem> itemsList){
+        List<Product> productsInStock = itemsList.stream().map(
+                item -> productRepository.findById(item.getProductId())
+        ).collect(Collectors.toList());
+
+        if(!productsInStock.isEmpty()){
+            return productsInStock;
+        }else{
+            return null;
+        }
+
     }
 }

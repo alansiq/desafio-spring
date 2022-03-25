@@ -99,4 +99,16 @@ public class ProductRepository implements IProductRepository {
         }
     }
 
+    @Override
+    public Product findById(Long id) {
+        List<Product> allResult = this.get();
+        Optional<Product> result = allResult.stream().filter(product -> product.getProductId().equals(id)).findFirst();
+        if(result.isPresent()){
+            return result.get();
+        }else{
+           return null;
+        }
+
+    }
+
 }
