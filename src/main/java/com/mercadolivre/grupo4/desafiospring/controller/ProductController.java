@@ -4,6 +4,7 @@ import com.mercadolivre.grupo4.desafiospring.dto.*;
 import com.mercadolivre.grupo4.desafiospring.entity.CompraItem;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistException;
+import com.mercadolivre.grupo4.desafiospring.exception.ProductQuantityDoesNotExistException;
 import com.mercadolivre.grupo4.desafiospring.service.ProductService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,8 +78,10 @@ public class ProductController {
             ResponsePurchaseDTO response = productService.assemblePurchaseDTO(itemsList);
             System.out.println(response);
             return new ResponseEntity(response,HttpStatus.OK);
-        }catch (ProductDoesNotExistException E){
+        } catch (ProductDoesNotExistException E){
             return  new ResponseEntity(E.getMessage(),HttpStatus.NOT_FOUND);
+        } catch (ProductQuantityDoesNotExistException E) {
+            return new ResponseEntity(E.getMessage(), HttpStatus.BAD_GATEWAY);
         }
     }
 

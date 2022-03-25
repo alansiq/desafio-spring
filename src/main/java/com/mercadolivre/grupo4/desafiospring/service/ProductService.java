@@ -7,6 +7,7 @@ import com.mercadolivre.grupo4.desafiospring.dto.TicketDTO;
 import com.mercadolivre.grupo4.desafiospring.entity.CompraItem;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistException;
+import com.mercadolivre.grupo4.desafiospring.exception.ProductQuantityDoesNotExistException;
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class ProductService {
 
     public ResponsePurchaseDTO assemblePurchaseDTO(List<CompraItem> itemList){
         List<Product> produtosEmEstoque = returnProductsInStock(itemList);
-        System.out.println(produtosEmEstoque);
+        verifyQuantityInStock(itemList);
         TicketDTO ticket = new TicketDTO();
         ticket.setArticles(produtosEmEstoque);
         Random generator = new Random();
@@ -133,5 +134,20 @@ public class ProductService {
             throw new ProductDoesNotExistException("Algum produto informado não existe em nossos servidores!");
         }
 
+    }
+
+    public void verifyQuantityInStock(List<CompraItem> itemsList){
+        List<Product> stock = productRepository.get();
+        for (Product x : stock) {
+            for (CompraItem p : itemsList){
+                if(x.getProductId().equals(p.getProductId())){
+                    if(p.getQuantity() > x.getQuantity()){
+                        throw new ProductQuantityDoesNotExistException("Quantidade solicitada do "
+                                + p.getName() + " não disponível. "
+                                + "Total em Estoque: " + x.getQuantity());
+                    }
+                }
+            }
+        }
     }
 }

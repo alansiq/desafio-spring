@@ -10,7 +10,7 @@ import java.util.Map;
 @Getter
 public class TicketDTO {
 
-    Map<String,Object> ticket;
+    private Map<String,Object> ticket;
 
     public TicketDTO(Long id, List<Product> list, Long total) {
         ticket = new HashMap<>();
