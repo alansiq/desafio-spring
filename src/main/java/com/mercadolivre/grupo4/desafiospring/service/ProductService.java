@@ -1,6 +1,5 @@
 package com.mercadolivre.grupo4.desafiospring.service;
 
-
 import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
 import com.mercadolivre.grupo4.desafiospring.dto.ResponsePurchaseDTO;
 import com.mercadolivre.grupo4.desafiospring.dto.TicketDTO;
@@ -14,15 +13,11 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import java.util.Comparator;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-
 @Service
 public class ProductService {
-
     @Autowired
     private ProductRepository productRepository;
 
@@ -70,7 +65,7 @@ public class ProductService {
         BigDecimal preco = produtosEmEstoque.stream()
                 .map(Product::getPrice)
                 .reduce(BigDecimal.valueOf(0),BigDecimal::add);
-        ticket.setTotal(Long.valueOf(preco.longValue()));
+        ticket.setTotal(preco.longValue());
         return new ResponsePurchaseDTO(ticket);
     }
 
@@ -81,7 +76,7 @@ public class ProductService {
         if(!productsInStock.isEmpty()){
             return productsInStock;
         } else {
-            throw new ProductDoesNotExistException("Algum produto informado não existe em nossos servidores!");
+            throw new ProductDoesNotExistException("Algum produto informado não existe em nosso estoque!");
         }
     }
 
@@ -99,8 +94,6 @@ public class ProductService {
                 }
             }
         }
-       if(!errors.toString().isEmpty()){
-           throw new ProductQuantityDoesNotExistException(errors.toString());
-       }
+       if(!errors.toString().isEmpty()) throw new ProductQuantityDoesNotExistException(errors.toString());
     }
 }

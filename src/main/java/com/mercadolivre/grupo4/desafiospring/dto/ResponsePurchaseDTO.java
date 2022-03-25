@@ -1,7 +1,6 @@
 package com.mercadolivre.grupo4.desafiospring.dto;
 
 import lombok.Getter;
-
 import java.util.HashMap;
 import java.util.Map;
 

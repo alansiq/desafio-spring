@@ -55,7 +55,7 @@ public class ProductRepository implements IProductRepository {
             ordered.sort(comparator.reversed());
             return ordered;
         } else {
-            orderByPrice(order);
+            ordered = orderByPrice(order);
         }
         return ordered;
     }
@@ -131,7 +131,7 @@ public class ProductRepository implements IProductRepository {
         if(result.isPresent()){
             return result.get();
         } else {
-            throw new ProductDoesNotExistException("Algum produto informado não existe em nossos servidores!");
+            throw new ProductDoesNotExistException("Algum produto informado não existe em nosso estoque!");
         }
     }
 }

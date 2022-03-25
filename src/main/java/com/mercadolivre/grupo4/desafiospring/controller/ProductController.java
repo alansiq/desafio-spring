@@ -1,5 +1,7 @@
 package com.mercadolivre.grupo4.desafiospring.controller;
-import com.mercadolivre.grupo4.desafiospring.dto.*;
+import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
+import com.mercadolivre.grupo4.desafiospring.dto.ResponsePurchaseDTO;
+import com.mercadolivre.grupo4.desafiospring.dto.PurchaseRequestDTO;
 import com.mercadolivre.grupo4.desafiospring.entity.CompraItem;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistException;
@@ -10,7 +12,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import java.math.BigDecimal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +26,6 @@ import java.util.Optional;
 @Validated
 @RestController
 public class ProductController {
-
     @Autowired
     private final ProductService productService;
 
@@ -38,7 +44,8 @@ public class ProductController {
                                                         )
 
     {
-        List<ProductDTO> result = productService.productsFilterBy(name, category, brand, price, freeShipping, prestige, order);
+        List<ProductDTO> result = productService
+                .productsFilterBy(name, category, brand, price, freeShipping, prestige, order);
 
         return ResponseEntity.ok().body(result);
     }
