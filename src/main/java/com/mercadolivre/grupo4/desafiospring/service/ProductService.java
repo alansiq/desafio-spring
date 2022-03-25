@@ -25,11 +25,6 @@ public class ProductService {
     }
 
     public boolean save(List<Product> productList) {
-        // TODO: 24/03/22 Iterar sobre productList e validar todos os campos
-        productList.forEach(product -> {
-            ProductValidationService.isValid(product);
-        });
-
         return productRepository.addList(productList);
     }
 }
