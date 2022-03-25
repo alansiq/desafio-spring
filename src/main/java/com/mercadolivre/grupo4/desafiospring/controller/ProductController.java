@@ -38,7 +38,7 @@ public class ProductController {
                                                                     )
     {
 
-        List<ProductDTO> result = productService.listFilteredProducts(name, category, brand, price, freeShipping, prestige);
+        List<ProductDTO> result = productService.productsFilteredBy(name, category, brand, price, freeShipping, prestige);
 
         return ResponseEntity.ok().body(result);
     }
