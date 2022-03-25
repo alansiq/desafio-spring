@@ -2,23 +2,23 @@ package com.mercadolivre.grupo4.desafiospring.service;
 
 
 import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
+import com.mercadolivre.grupo4.desafiospring.dto.ResponsePurchaseDTO;
+import com.mercadolivre.grupo4.desafiospring.dto.TicketDTO;
 import com.mercadolivre.grupo4.desafiospring.entity.CompraItem;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
+import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistException;
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.Comparator;
+import java.util.*;
 
 
 import java.util.Comparator;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -40,7 +40,22 @@ public class ProductService {
         return productRepository.addList(productList);
     }
 
-    public List<ProductDTO> productsFilteredBy(  Optional<String> name,
+
+    public ResponsePurchaseDTO assemblePurchaseDTO(List<CompraItem> itemList){
+        List<Product> produtosEmEstoque = returnProductsInStock(itemList);
+        TicketDTO ticket = new TicketDTO();
+        ticket.setArticles(produtosEmEstoque);
+        Random generator = new Random();
+        ticket.setID(generator.nextLong());
+        BigDecimal preco = produtosEmEstoque.stream()
+                .map(Product::getPrice)
+                .reduce(BigDecimal.valueOf(0),BigDecimal::add);
+        ticket.setTotal(Long.valueOf(preco.longValue()));
+        return new ResponsePurchaseDTO(ticket);
+
+    }
+
+    public List<ProductDTO> productsFilteredBy(Optional<String> name,
                                                  Optional<String> category,
                                                  Optional<String> brand,
                                                  Optional<BigDecimal> price,
@@ -96,7 +111,7 @@ public class ProductService {
         if(!productsInStock.isEmpty()){
             return productsInStock;
         } else {
-            return null;
+            throw new ProductDoesNotExistException("Algum produto informado não existe em nossos servidores!");
         }
 
     }
