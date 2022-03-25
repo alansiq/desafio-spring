@@ -12,12 +12,9 @@ import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import java.util.*;
 
 
-import java.util.Comparator;
 import java.math.BigDecimal;
 
 import java.util.stream.Collectors;
@@ -138,16 +135,24 @@ public class ProductService {
 
     public void verifyQuantityInStock(List<CompraItem> itemsList){
         List<Product> stock = productRepository.get();
+
+        //List<CompraItem> list = itemsList.stream().filter(
+        //                itemList -> itemList.getQuantity() <
+        //                        productRepository.findById(itemList.getProductId()).getQuantity())
+        //        .collect(Collectors.toList());
+        //System.out.println(list);
+        StringBuilder errors = new StringBuilder();
         for (Product x : stock) {
             for (CompraItem p : itemsList){
                 if(x.getProductId().equals(p.getProductId())){
                     if(p.getQuantity() > x.getQuantity()){
-                        throw new ProductQuantityDoesNotExistException("Quantidade solicitada do "
+                        errors.append("Quantidade solicitada do "
                                 + p.getName() + " não disponível. "
-                                + "Total em Estoque: " + x.getQuantity());
+                                + "Total em Estoque: " + x.getQuantity() + "\n");
                     }
                 }
             }
         }
+        throw new ProductQuantityDoesNotExistException(errors.toString());
     }
 }
