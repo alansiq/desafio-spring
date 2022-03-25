@@ -11,10 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -51,12 +48,23 @@ public class ProductRepository implements IProductRepository {
         return result;
     }
 
-
     public List<ProductDTO> findByCategory(String category) {
         List<Product> allResult = this.get();
         List<Product> filterResuts = allResult.stream().filter(product -> product.getCategory().equals(category)).collect(Collectors.toList());
         List<ProductDTO> result = filterResuts.stream().map(product -> new ProductDTO(product)).collect(Collectors.toList());
         return result;
+    }
+
+    public List<ProductDTO> orderBy(int order){
+        List<Product> allResult = this.get();
+        List<Product> ordered = allResult.stream().sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
+        if (order == 1) {
+            Comparator<Product> comparator = Comparator.comparing(Product::getName);
+            ordered.sort(comparator.reversed());
+            return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
+        }
+
+        return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
     }
 
     @Override

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import org.springframework.web.bind.annotation.*;
@@ -52,11 +51,15 @@ public class ProductController {
         return ResponseEntity.badRequest().build();
     }
 
-
     @GetMapping(path = "/products")
-    public ResponseEntity<List<ProductDTO>> findByCategory(@RequestParam String categoryName){
+    public ResponseEntity<List<ProductDTO>> findByCategory(@RequestParam String categoryName) {
         List<ProductDTO> result = productService.findByCategory(categoryName);
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/api/v1/articles")
+    public ResponseEntity<List<ProductDTO>> orderByName(@RequestParam(value = "order", defaultValue = "0") Integer order) {
+        List<ProductDTO> result = productService.orderByName(order);
+        return ResponseEntity.ok(result);
+    }
 }

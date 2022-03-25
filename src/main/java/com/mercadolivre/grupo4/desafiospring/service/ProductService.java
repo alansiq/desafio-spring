@@ -7,6 +7,7 @@ import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,9 +25,12 @@ public class ProductService {
         return productRepository.findByCategory(category);
     }
 
+    public List<ProductDTO> orderByName(int order) {
+        return productRepository.orderBy(order);
+    }
+
     public boolean save(List<Product> productList) {
         return productRepository.addList(productList);
-
     }
 
     public List<ProductDTO> productsFilteredBy(Optional<String> name,
