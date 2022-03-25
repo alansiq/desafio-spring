@@ -4,6 +4,7 @@ package com.mercadolivre.grupo4.desafiospring.service;
 import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
 import com.mercadolivre.grupo4.desafiospring.entity.CompraItem;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
+import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistException;
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,10 +110,12 @@ public class ProductService {
                 item -> productRepository.findById(item.getProductId())
         ).collect(Collectors.toList());
 
+        System.out.println("produtos");
+        System.out.println(productsInStock);
         if(!productsInStock.isEmpty()){
             return productsInStock;
         } else {
-            return null;
+            throw new ProductDoesNotExistException("Algum produto informado não existe em nossos servidores!");
         }
 
     }
