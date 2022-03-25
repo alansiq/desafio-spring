@@ -62,4 +62,10 @@ public class ProductController {
         List<ProductDTO> result = productService.orderByName(order);
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/api/v1/articles2")
+    public ResponseEntity<List<ProductDTO>> orderByPrice(@RequestParam(value = "order", defaultValue = "2") int order) {
+            List<ProductDTO> result = productService.orderByPrice(order);
+        return ResponseEntity.ok(result);
+    }
 }
