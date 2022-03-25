@@ -67,7 +67,7 @@ public class ProductController {
         } catch (ProductDoesNotExistException E){
             return  new ResponseEntity(E.getMessage(),HttpStatus.NOT_FOUND);
         } catch (ProductQuantityDoesNotExistException E) {
-            return new ResponseEntity(E.getMessage(), HttpStatus.BAD_GATEWAY);
+            return new ResponseEntity(E.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
