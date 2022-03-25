@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IProductRepository {
 
-    List<Product> get();
+    List<Product> getAll();
     boolean addList (List<Product> productList);
     boolean add(Product product);
 
