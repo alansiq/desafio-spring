@@ -5,10 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import org.springframework.stereotype.Repository;
-
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -48,12 +47,33 @@ public class ProductRepository implements IProductRepository {
         return result;
     }
 
-
     public List<ProductDTO> findByCategory(String category) {
         List<Product> allResult = this.get();
         List<Product> filterResuts = allResult.stream().filter(product -> product.getCategory().equals(category)).collect(Collectors.toList());
         List<ProductDTO> result = filterResuts.stream().map(product -> new ProductDTO(product)).collect(Collectors.toList());
         return result;
+    }
+
+    public List<ProductDTO> orderByName(int order){
+        List<Product> allResult = this.get();
+        List<Product> ordered = allResult.stream().sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
+        if (order == 1) {
+            Comparator<Product> comparator = Comparator.comparing(Product::getName);
+            ordered.sort(comparator.reversed());
+            return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
+        }
+        return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
+    }
+
+    public List<ProductDTO> orderByPrice(int order){
+        List<Product> allResult = this.get();
+        List<Product> ordered = allResult.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
+        if (order == 3) {
+            Comparator<Product> comparator = Comparator.comparing(Product::getPrice);
+            ordered.sort(comparator.reversed());
+            return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
+        }
+        return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
     }
 
     @Override
