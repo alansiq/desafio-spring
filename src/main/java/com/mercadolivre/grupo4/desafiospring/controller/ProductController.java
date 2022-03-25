@@ -47,13 +47,13 @@ public class ProductController {
     }
 
     @GetMapping("/api/v1/articles")
-    public ResponseEntity<List<ProductDTO>> orderByName(@RequestParam(value = "order", defaultValue = "0") Integer order) {
+    public ResponseEntity<List<ProductDTO>> orderByName(@RequestParam(value = "order", defaultValue = "0") int order) {
         List<ProductDTO> result = productService.orderByName(order);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping("/api/v1/articles2")
-    public ResponseEntity<List<ProductDTO>> orderByPrice(@RequestParam(value = "order", defaultValue = "2") Integer order) {
+    public ResponseEntity<List<ProductDTO>> orderByPrice(@RequestParam(value = "order", defaultValue = "2") int order) {
             List<ProductDTO> result = productService.orderByPrice(order);
         return ResponseEntity.ok(result);
     }

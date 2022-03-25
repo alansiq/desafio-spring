@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import org.springframework.stereotype.Repository;
-
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -66,13 +64,10 @@ public class ProductRepository implements IProductRepository {
         }
         return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
     }
-//.sorted((a, b) -> new BigDecimal(b).compareTo(new BigDecimal(a)))
-//            .collect(Collectors.joining(", ")));
-//    (Product product1, Product product2)-> (int)(product1.getPrice()-product2.getPrice())
+
     public List<ProductDTO> orderByPrice(int order){
         List<Product> allResult = this.get();
-        List<Product> ordered = allResult.stream().sorted((a, b) -> new BigDecimal(b.getPrice()).compareTo(new BigDecimal(a.getPrice())))
-                .collect(Collectors.toList());
+        List<Product> ordered = allResult.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
         if (order == 3) {
             Comparator<Product> comparator = Comparator.comparing(Product::getPrice);
             ordered.sort(comparator.reversed());
@@ -80,8 +75,6 @@ public class ProductRepository implements IProductRepository {
         }
         return ordered.stream().map(ProductDTO::new).collect(Collectors.toList());
     }
-
-
 
     @Override
     public boolean addList(List<Product> productsToAddList) {
