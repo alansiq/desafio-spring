@@ -2,23 +2,23 @@ package com.mercadolivre.grupo4.desafiospring.service;
 
 
 import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
+import com.mercadolivre.grupo4.desafiospring.dto.ResponsePurchaseDTO;
+import com.mercadolivre.grupo4.desafiospring.dto.TicketDTO;
 import com.mercadolivre.grupo4.desafiospring.entity.CompraItem;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
+import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistException;
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.Comparator;
+import java.util.*;
 
 
 import java.util.Comparator;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -28,20 +28,31 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<ProductDTO> findByCategory(String category) {
-        return productRepository.findByCategory(category);
-    }
-
     public List<ProductDTO> orderByName(int order) {
-        return productRepository.orderByName(order);
+        return ProductDTO.convert(productRepository.orderByName(order));
     }
 
     public List<ProductDTO> orderByPrice(int order) {
-        return productRepository.orderByPrice(order);
+        return  ProductDTO.convert(productRepository.orderByPrice(order));
     }
 
     public boolean save(List<Product> productList) {
         return productRepository.addList(productList);
+    }
+
+
+    public ResponsePurchaseDTO assemblePurchaseDTO(List<CompraItem> itemList){
+        List<Product> produtosEmEstoque = returnProductsInStock(itemList);
+        TicketDTO ticket = new TicketDTO();
+        ticket.setArticles(produtosEmEstoque);
+        Random generator = new Random();
+        ticket.setID(generator.nextLong());
+        BigDecimal preco = produtosEmEstoque.stream()
+                .map(Product::getPrice)
+                .reduce(BigDecimal.valueOf(0),BigDecimal::add);
+        ticket.setTotal(Long.valueOf(preco.longValue()));
+        return new ResponsePurchaseDTO(ticket);
+
     }
 
     public List<ProductDTO> productsFilteredBy(Optional<String> name,
@@ -55,50 +66,38 @@ public class ProductService {
 
         if (name.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getName() == null) return false;
-                        return product.getName().equals(name.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                         product.getName().equals(name.get())).collect(Collectors.toList());
         }
 
         if (category.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getCategory() == null) return false;
-                        return product.getCategory().equals(category.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                        product.getCategory().equals(category.get())).collect(Collectors.toList());
         }
 
         if (brand.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getBrand() == null) return false;
-                        return product.getBrand().equals(brand.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                            product.getBrand().equals(brand.get())).collect(Collectors.toList());
         }
 
         if (price.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getPrice() == null) return false;
-                        return product.getPrice().equals(price.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                        product.getPrice().equals(price.get())).collect(Collectors.toList());
         }
 
         if (freeShipping.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getFreeShipping() == null) return false;
-                        return product.getFreeShipping().equals(freeShipping.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                        product.getFreeShipping().equals(freeShipping.get())).collect(Collectors.toList());
         }
 
         if (prestige.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getPrestige() == null) return false;
-                        return product.getPrestige().equals(prestige.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                        product.getPrestige().equals(prestige.get())).collect(Collectors.toList());
         }
 
         return ProductDTO.convert(resultList);
@@ -112,7 +111,7 @@ public class ProductService {
         if(!productsInStock.isEmpty()){
             return productsInStock;
         } else {
-            return null;
+            throw new ProductDoesNotExistException("Algum produto informado não existe em nossos servidores!");
         }
 
     }
