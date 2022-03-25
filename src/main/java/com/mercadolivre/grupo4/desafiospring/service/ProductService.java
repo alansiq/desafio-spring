@@ -28,23 +28,19 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<ProductDTO> findByCategory(String category) {
-        return productRepository.findByCategory(category);
-    }
-
     public List<ProductDTO> orderByName(int order) {
-        return productRepository.orderByName(order);
+        return ProductDTO.convert(productRepository.orderByName(order));
     }
 
     public List<ProductDTO> orderByPrice(int order) {
-        return productRepository.orderByPrice(order);
+        return  ProductDTO.convert(productRepository.orderByPrice(order));
     }
 
     public boolean save(List<Product> productList) {
         return productRepository.addList(productList);
     }
 
-    public List<ProductDTO> productsFilteredBy(Optional<String> name,
+    public List<ProductDTO> productsFilteredBy(  Optional<String> name,
                                                  Optional<String> category,
                                                  Optional<String> brand,
                                                  Optional<BigDecimal> price,
@@ -55,50 +51,38 @@ public class ProductService {
 
         if (name.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getName() == null) return false;
-                        return product.getName().equals(name.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                         product.getName().equals(name.get())).collect(Collectors.toList());
         }
 
         if (category.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getCategory() == null) return false;
-                        return product.getCategory().equals(category.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                        product.getCategory().equals(category.get())).collect(Collectors.toList());
         }
 
         if (brand.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getBrand() == null) return false;
-                        return product.getBrand().equals(brand.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                            product.getBrand().equals(brand.get())).collect(Collectors.toList());
         }
 
         if (price.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getPrice() == null) return false;
-                        return product.getPrice().equals(price.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                        product.getPrice().equals(price.get())).collect(Collectors.toList());
         }
 
         if (freeShipping.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getFreeShipping() == null) return false;
-                        return product.getFreeShipping().equals(freeShipping.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                        product.getFreeShipping().equals(freeShipping.get())).collect(Collectors.toList());
         }
 
         if (prestige.isPresent()) {
             resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getPrestige() == null) return false;
-                        return product.getPrestige().equals(prestige.get());
-                    }).collect(Collectors.toList());
+                    resultList.stream().filter(product ->
+                        product.getPrestige().equals(prestige.get())).collect(Collectors.toList());
         }
 
         return ProductDTO.convert(resultList);
