@@ -7,16 +7,6 @@ import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.Comparator;
-
-
-import java.util.Comparator;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,33 +22,29 @@ public class ProductService {
         return productRepository.findByCategory(category);
     }
 
-    public List<ProductDTO> orderByName(int order) {
-        return productRepository.orderByName(order);
+    public List<ProductDTO> orderByName(Integer order) {
+        return ProductDTO.convert(productRepository.orderByName(order));
     }
 
-    public List<ProductDTO> orderByPrice(int order) {
-        return productRepository.orderByPrice(order);
+    public List<ProductDTO> orderByPrice(Integer order) {
+        return ProductDTO.convert(productRepository.orderByPrice(order));
     }
 
     public boolean save(List<Product> productList) {
         return productRepository.addList(productList);
     }
 
-    public List<ProductDTO> productsFilteredBy(Optional<String> name,
+    public List<ProductDTO> productsFilteredBy(Optional<Integer> name,
                                                  Optional<String> category,
                                                  Optional<String> brand,
-                                                 Optional<BigDecimal> price,
+                                                 Optional<Integer> price,
                                                  Optional<Boolean> freeShipping,
                                                  Optional<String> prestige)
     {
         List<Product> resultList = productRepository.get();
 
         if (name.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getName() == null) return false;
-                        return product.getName().equals(name.get());
-                    }).collect(Collectors.toList());
+            resultList = productRepository.orderByPrice(name.get());
         }
 
         if (category.isPresent()) {
@@ -78,11 +64,7 @@ public class ProductService {
         }
 
         if (price.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getPrice() == null) return false;
-                        return product.getPrice().equals(price.get());
-                    }).collect(Collectors.toList());
+            resultList = productRepository.orderByPrice(price.get());
         }
 
         if (freeShipping.isPresent()) {
