@@ -37,7 +37,6 @@ public class ProductController {
                                                         @RequestParam(required = false) Optional<Integer> order
                                                         )
     {
-
         List<ProductDTO> result = productService.productsFilterBy(name, category, brand, price, freeShipping, prestige, order);
 
         return ResponseEntity.ok().body(result);
@@ -52,7 +51,7 @@ public class ProductController {
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping (path = "/compra")
+    @PostMapping (path = "/api/v1/purchase-request")
     @ResponseBody
     public ResponseEntity<ResponsePurchaseDTO> findByCategory(@RequestBody Map<String,List<CompraItem>> purchaseRequest){
         PurchaseRequestDTO purchaseRequestDTO = new PurchaseRequestDTO(purchaseRequest);
