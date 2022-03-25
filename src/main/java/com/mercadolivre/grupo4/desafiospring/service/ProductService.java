@@ -10,15 +10,11 @@ import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistExcept
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.*;
-
-
-import java.util.Comparator;
 import java.math.BigDecimal;
-
+import java.util.List;
+import java.util.Optional;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 
@@ -28,19 +24,40 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<ProductDTO> orderByName(int order) {
-        return ProductDTO.convert(productRepository.orderByName(order));
-    }
-
-    public List<ProductDTO> orderByPrice(int order) {
-        return  ProductDTO.convert(productRepository.orderByPrice(order));
-    }
-
     public boolean save(List<Product> productList) {
         return productRepository.addList(productList);
     }
 
+    public List<ProductDTO> productsFilterBy(Optional<String> name, Optional<String> category,
+                                             Optional<String> brand, Optional<BigDecimal> price,
+                                             Optional<Boolean> freeShipping, Optional<String> prestige,
+                                             Optional<Integer> order)
+    {
+        List<Product> listAfterFilters = productRepository.getAll();
 
+        if (name.isPresent()) listAfterFilters = productRepository.filterByName(name.get());
+
+        if (category.isPresent()) listAfterFilters = productRepository.filterByCategory(category.get());
+
+        if (brand.isPresent()) listAfterFilters = productRepository.filterByBrand(brand.get());
+
+        if (price.isPresent()) listAfterFilters = productRepository.filterByPrice(price.get());
+
+        if (freeShipping.isPresent()) listAfterFilters = productRepository.filterByShipping(freeShipping.get());
+
+        if (prestige.isPresent()) listAfterFilters =productRepository.filterByPrestige(prestige.get());
+
+        return productsOrderBy(order, listAfterFilters);
+    }
+
+    public List<ProductDTO> productsOrderBy(Optional<Integer> order, List<Product> listAfterFilters) {
+        List<Product> listAfterOrder = listAfterFilters;
+
+        if (order.isPresent()) listAfterOrder = productRepository.orderByName(order.get());
+      
+        return ProductDTO.convert(listAfterOrder);
+    }
+  
     public ResponsePurchaseDTO assemblePurchaseDTO(List<CompraItem> itemList){
         List<Product> produtosEmEstoque = returnProductsInStock(itemList);
         TicketDTO ticket = new TicketDTO();
@@ -52,67 +69,16 @@ public class ProductService {
                 .reduce(BigDecimal.valueOf(0),BigDecimal::add);
         ticket.setTotal(Long.valueOf(preco.longValue()));
         return new ResponsePurchaseDTO(ticket);
-
-    }
-
-    public List<ProductDTO> productsFilteredBy(Optional<String> name,
-                                                 Optional<String> category,
-                                                 Optional<String> brand,
-                                                 Optional<BigDecimal> price,
-                                                 Optional<Boolean> freeShipping,
-                                                 Optional<String> prestige)
-    {
-        List<Product> resultList = productRepository.get();
-
-        if (name.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product ->
-                         product.getName().equals(name.get())).collect(Collectors.toList());
-        }
-
-        if (category.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product ->
-                        product.getCategory().equals(category.get())).collect(Collectors.toList());
-        }
-
-        if (brand.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product ->
-                            product.getBrand().equals(brand.get())).collect(Collectors.toList());
-        }
-
-        if (price.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product ->
-                        product.getPrice().equals(price.get())).collect(Collectors.toList());
-        }
-
-        if (freeShipping.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product ->
-                        product.getFreeShipping().equals(freeShipping.get())).collect(Collectors.toList());
-        }
-
-        if (prestige.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product ->
-                        product.getPrestige().equals(prestige.get())).collect(Collectors.toList());
-        }
-
-        return ProductDTO.convert(resultList);
     }
 
     public List<Product> returnProductsInStock(List<CompraItem> itemsList){
         List<Product> productsInStock = itemsList.stream().map(
                 item -> productRepository.findById(item.getProductId())
         ).collect(Collectors.toList());
-
         if(!productsInStock.isEmpty()){
             return productsInStock;
         } else {
             throw new ProductDoesNotExistException("Algum produto informado não existe em nossos servidores!");
         }
-
     }
 }

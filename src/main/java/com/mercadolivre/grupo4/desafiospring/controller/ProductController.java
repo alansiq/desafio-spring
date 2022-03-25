@@ -34,11 +34,12 @@ public class ProductController {
                                                         @RequestParam(required = false) Optional<String> brand,
                                                         @RequestParam(required = false) Optional<BigDecimal> price,
                                                         @RequestParam(required = false) Optional<Boolean> freeShipping,
-                                                        @RequestParam(required = false) Optional<String> prestige
-                                                                    )
-    {
+                                                        @RequestParam(required = false) Optional<String> prestige,
+                                                        @RequestParam(required = false) Optional<Integer> order
+                                                        )
 
-        List<ProductDTO> result = productService.productsFilteredBy(name, category, brand, price, freeShipping, prestige);
+    {
+        List<ProductDTO> result = productService.productsFilterBy(name, category, brand, price, freeShipping, prestige, order);
 
         return ResponseEntity.ok().body(result);
     }
@@ -52,7 +53,7 @@ public class ProductController {
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping (path = "/compra")
+    @PostMapping (path = "/api/v1/purchase-request")
     @ResponseBody
     public ResponseEntity<ResponsePurchaseDTO> findByCategory(@RequestBody Map<String,List<CompraItem>> purchaseRequest){
         PurchaseRequestDTO purchaseRequestDTO = new PurchaseRequestDTO(purchaseRequest);
@@ -65,17 +66,6 @@ public class ProductController {
         }catch (ProductDoesNotExistException E){
             return  new ResponseEntity(E.getMessage(),HttpStatus.NOT_FOUND);
         }
-    }
 
-    @GetMapping("/api/v1/articles")
-    public ResponseEntity<List<ProductDTO>> orderByName(@RequestParam(value = "order", defaultValue = "0") Integer order) {
-        List<ProductDTO> result = productService.orderByName(order);
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping("/api/v1/articles2")
-    public ResponseEntity<List<ProductDTO>> orderByPrice(@RequestParam(value = "order", defaultValue = "2") int order) {
-            List<ProductDTO> result = productService.orderByPrice(order);
-        return ResponseEntity.ok(result);
     }
 }
