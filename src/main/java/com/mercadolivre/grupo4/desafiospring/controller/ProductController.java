@@ -72,27 +72,14 @@ public class ProductController {
     public ResponseEntity<ResponsePurchaseDTO> findByCategory(@RequestBody Map<String,List<CompraItem>> purchaseRequest){
         PurchaseRequestDTO purchaseRequestDTO = new PurchaseRequestDTO(purchaseRequest);
         List<CompraItem> itemsList = purchaseRequestDTO.getCompraItem();
-        System.out.println(itemsList);
 
         try {
-            List<Product> produtosEmEstoque = productService.returnProductsInStock(itemsList);
-            System.out.println(produtosEmEstoque);
-            TicketDTO ticket = new TicketDTO();
-            ticket.setArticles(produtosEmEstoque);
-            Random generator = new Random();
-            ticket.setID(generator.nextLong());
-            BigDecimal preco = produtosEmEstoque.stream()
-                    .map(Product::getPrice)
-                    .reduce(BigDecimal.valueOf(0),BigDecimal::add);
-            ticket.setTotal(Long.valueOf(preco.longValue()));
-
-            ResponsePurchaseDTO response = new ResponsePurchaseDTO(ticket);
+            ResponsePurchaseDTO response = productService.assemblePurchaseDTO(itemsList);
             System.out.println(response);
             return new ResponseEntity(response,HttpStatus.OK);
         }catch (ProductDoesNotExistException E){
             return  new ResponseEntity(E.getMessage(),HttpStatus.NOT_FOUND);
         }
-
     }
 
     @GetMapping("/api/v1/articles")
