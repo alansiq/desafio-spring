@@ -58,7 +58,7 @@ public class ProductController {
     }
 
     @GetMapping("/api/v1/articles")
-    public ResponseEntity<List<ProductDTO>> orderByName(@RequestParam(value = "order", defaultValue = "asc") Integer order) {
+    public ResponseEntity<List<ProductDTO>> orderByName(@RequestParam(value = "order", defaultValue = "0") Integer order) {
         List<ProductDTO> result = productService.orderByName(order);
         return ResponseEntity.ok(result);
     }
