@@ -29,7 +29,7 @@ public class ProductService {
 
     }
 
-    public List<ProductDTO> listFilteredProducts(Optional<String> name,
+    public List<ProductDTO> productsFilteredBy(Optional<String> name,
                                                  Optional<String> category,
                                                  Optional<String> brand,
                                                  Optional<BigDecimal> price,
