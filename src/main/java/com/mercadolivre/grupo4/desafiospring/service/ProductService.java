@@ -116,4 +116,8 @@ public class ProductService {
         }
 
     }
+
+    public Product findByProductId(Long productId) {
+        productRepository.get().stream().findAny(product -> product);
+    }
 }
