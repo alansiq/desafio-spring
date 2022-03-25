@@ -2,12 +2,10 @@ package com.mercadolivre.grupo4.desafiospring.repository;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import org.springframework.stereotype.Repository;
 import java.io.File;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -31,7 +29,7 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public List<Product> get(){
+    public List<Product> getAll(){
         List<Product> result = new ArrayList<>();
         try{
             byte[] mapData = Files.readAllBytes(Paths.get(this.JSON_FILE));
@@ -47,16 +45,9 @@ public class ProductRepository implements IProductRepository {
         return result;
     }
 
-    public List<ProductDTO> findByCategory(String category) {
-        List<Product> allResult = this.get();
-        List<Product> filterResuts = allResult.stream().filter(product -> product.getCategory().equals(category)).collect(Collectors.toList());
-        List<ProductDTO> result = filterResuts.stream().map(product -> new ProductDTO(product)).collect(Collectors.toList());
-        return result;
-    }
-
     public List<Product> orderByName(Integer order){
-        List<Product> allResult = this.get();
-        List<Product> ordered = allResult.stream().sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
+        List<Product> ordered = this.getAll().stream()
+                .sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
         if (order == 1) {
             Comparator<Product> comparator = Comparator.comparing(Product::getName);
             ordered.sort(comparator.reversed());
@@ -66,8 +57,8 @@ public class ProductRepository implements IProductRepository {
     }
 
     public List<Product> orderByPrice(Integer order){
-        List<Product> allResult = this.get();
-        List<Product> ordered = allResult.stream().sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
+        List<Product> ordered = this.getAll().stream()
+                .sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
         if (order == 3) {
             Comparator<Product> comparator = Comparator.comparing(Product::getPrice);
             ordered.sort(comparator.reversed());
@@ -76,9 +67,29 @@ public class ProductRepository implements IProductRepository {
         return ordered;
     }
 
+    public List<Product> filterByShipping(Boolean freeShipping) {
+        return this.getAll().stream()
+                .filter(product -> product.getFreeShipping().equals(freeShipping)).collect(Collectors.toList());
+    }
+
+    public List<Product> filterByCategory(String category) {
+        return this.getAll().stream()
+                .filter(product -> product.getCategory().equals(category)).collect(Collectors.toList());
+    }
+
+    public List<Product> filterByBrand(String brand) {
+        return this.getAll().stream()
+                .filter(product -> product.getCategory().equals(brand)).collect(Collectors.toList());
+    }
+
+    public List<Product> filterByPrestige(String prestige) {
+        return this.getAll().stream()
+                .filter(product -> product.getCategory().equals(prestige)).collect(Collectors.toList());
+    }
+
     @Override
     public boolean addList(List<Product> productsToAddList) {
-        List<Product> productList = this.get();
+        List<Product> productList = this.getAll();
 
         productList.addAll(productsToAddList);
         this.save(productList);
@@ -89,7 +100,7 @@ public class ProductRepository implements IProductRepository {
     @Override
     public boolean add(Product product) {
         try {
-            List<Product> productList = this.get();
+            List<Product> productList = this.getAll();
             productList.add(product);
             this.save(productList);
             return true;
@@ -101,7 +112,7 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public Product findById(Long id) {
-        List<Product> allResult = this.get();
+        List<Product> allResult = this.getAll();
         Optional<Product> result = allResult.stream().filter(product -> product.getProductId().equals(id)).findFirst();
         if(result.isPresent()){
             return result.get();

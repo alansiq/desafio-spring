@@ -28,7 +28,7 @@ public class ProductController {
     }
 
     @GetMapping("api/v1/products")
-    public ResponseEntity<List<ProductDTO>> listAllProductsFiltered(@RequestParam(required = false) Optional<Integer> name ,
+    public ResponseEntity<List<ProductDTO>> getProducts(@RequestParam(required = false) Optional<Integer> name ,
                                                                     @RequestParam(required = false) Optional<String> category,
                                                                     @RequestParam(required = false) Optional<String> brand,
                                                                     @RequestParam(required = false) Optional<Integer> price,
@@ -49,12 +49,6 @@ public class ProductController {
             return  ResponseEntity.status(HttpStatus.CREATED).body(ProductDTO.convert(productList));
         }
         return ResponseEntity.badRequest().build();
-    }
-
-    @GetMapping(path = "/products")
-    public ResponseEntity<List<ProductDTO>> findByCategory(@RequestParam String categoryName) {
-        List<ProductDTO> result = productService.findByCategory(categoryName);
-        return ResponseEntity.ok(result);
     }
 
     @PostMapping (path = "/compra")

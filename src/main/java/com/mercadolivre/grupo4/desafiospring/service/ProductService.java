@@ -18,18 +18,6 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    public List<ProductDTO> findByCategory(String category) {
-        return productRepository.findByCategory(category);
-    }
-
-    public List<ProductDTO> orderByName(Integer order) {
-        return ProductDTO.convert(productRepository.orderByName(order));
-    }
-
-    public List<ProductDTO> orderByPrice(Integer order) {
-        return ProductDTO.convert(productRepository.orderByPrice(order));
-    }
-
     public boolean save(List<Product> productList) {
         return productRepository.addList(productList);
     }
@@ -41,47 +29,19 @@ public class ProductService {
                                                  Optional<Boolean> freeShipping,
                                                  Optional<String> prestige)
     {
-        List<Product> resultList = productRepository.get();
+        List<Product> resultList = productRepository.getAll();
 
-        if (name.isPresent()) {
-            resultList = productRepository.orderByPrice(name.get());
-        }
+        if (name.isPresent()) resultList = productRepository.orderByName(name.get());
 
-        if (category.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getCategory() == null) return false;
-                        return product.getCategory().equals(category.get());
-                    }).collect(Collectors.toList());
-        }
+        if (category.isPresent()) resultList = productRepository.filterByCategory(category.get());
 
-        if (brand.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getBrand() == null) return false;
-                        return product.getBrand().equals(brand.get());
-                    }).collect(Collectors.toList());
-        }
+        if (brand.isPresent()) resultList = productRepository.filterByBrand(brand.get());
 
-        if (price.isPresent()) {
-            resultList = productRepository.orderByPrice(price.get());
-        }
+        if (price.isPresent()) resultList = productRepository.orderByPrice(price.get());
 
-        if (freeShipping.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getFreeShipping() == null) return false;
-                        return product.getFreeShipping().equals(freeShipping.get());
-                    }).collect(Collectors.toList());
-        }
+        if (freeShipping.isPresent()) resultList = productRepository.filterByShipping(freeShipping.get());
 
-        if (prestige.isPresent()) {
-            resultList =
-                    resultList.stream().filter(product -> {
-                        if (product.getPrestige() == null) return false;
-                        return product.getPrestige().equals(prestige.get());
-                    }).collect(Collectors.toList());
-        }
+        if (prestige.isPresent()) resultList =productRepository.filterByPrestige(prestige.get());
 
         return ProductDTO.convert(resultList);
     }
