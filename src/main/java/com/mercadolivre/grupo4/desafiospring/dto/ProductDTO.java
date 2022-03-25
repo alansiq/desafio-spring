@@ -4,6 +4,7 @@ import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import lombok.Getter;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,11 +14,13 @@ public class ProductDTO implements Serializable {
     private Long productId;
     private String name;
     private int quantity;
+    private BigDecimal price;
 
     public ProductDTO (Product product) {
         this.productId = product.getProductId();
         this.name = product.getName();
         this.quantity = product.getQuantity();
+        this.price = product.getPrice();
 
     }
 
