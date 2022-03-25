@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mercadolivre.grupo4.desafiospring.dto.ProductDTO;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
+import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistException;
 import org.springframework.stereotype.Repository;
 import java.io.File;
 import java.io.IOException;
@@ -106,7 +107,7 @@ public class ProductRepository implements IProductRepository {
         if(result.isPresent()){
             return result.get();
         }else{
-           return null;
+            throw new ProductDoesNotExistException("Algum produto informado não existe em nossos servidores!");
         }
 
     }

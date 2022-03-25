@@ -3,6 +3,7 @@ package com.mercadolivre.grupo4.desafiospring.controller;
 import com.mercadolivre.grupo4.desafiospring.dto.*;
 import com.mercadolivre.grupo4.desafiospring.entity.CompraItem;
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
+import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistException;
 import com.mercadolivre.grupo4.desafiospring.service.ProductService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,28 +72,14 @@ public class ProductController {
     public ResponseEntity<ResponsePurchaseDTO> findByCategory(@RequestBody Map<String,List<CompraItem>> purchaseRequest){
         PurchaseRequestDTO purchaseRequestDTO = new PurchaseRequestDTO(purchaseRequest);
         List<CompraItem> itemsList = purchaseRequestDTO.getCompraItem();
-        System.out.println(itemsList);
 
-        List<Product> produtosEmEstoque = productService.returnProductsInStock(itemsList);
-        System.out.println(produtosEmEstoque);
-
-        if(!produtosEmEstoque.isEmpty()){
-            TicketDTO ticket = new TicketDTO();
-            ticket.setArticles(produtosEmEstoque);
-            Random generator = new Random();
-            ticket.setID(generator.nextLong());
-            BigDecimal preco = produtosEmEstoque.stream()
-                    .map(Product::getPrice)
-                    .reduce(BigDecimal.valueOf(0),BigDecimal::add);
-            ticket.setTotal(Long.valueOf(preco.longValue()));
-
-            ResponsePurchaseDTO response = new ResponsePurchaseDTO(ticket);
+        try {
+            ResponsePurchaseDTO response = productService.assemblePurchaseDTO(itemsList);
             System.out.println(response);
             return new ResponseEntity(response,HttpStatus.OK);
-        }else{
-            return  new ResponseEntity("produto nao cadastrado",HttpStatus.NOT_FOUND);
+        }catch (ProductDoesNotExistException E){
+            return  new ResponseEntity(E.getMessage(),HttpStatus.NOT_FOUND);
         }
-
     }
 
     @GetMapping("/api/v1/articles")
