@@ -7,6 +7,8 @@ import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,28 +24,34 @@ public class ProductService {
         return productRepository.addList(productList);
     }
 
-    public List<ProductDTO> productsFilteredBy(Optional<Integer> name,
-                                                 Optional<String> category,
-                                                 Optional<String> brand,
-                                                 Optional<Integer> price,
-                                                 Optional<Boolean> freeShipping,
-                                                 Optional<String> prestige)
+    public List<ProductDTO> productsFilterBy(Optional<String> name, Optional<String> category,
+                                             Optional<String> brand, Optional<BigDecimal> price,
+                                             Optional<Boolean> freeShipping, Optional<String> prestige,
+                                             Optional<Integer> order)
     {
-        List<Product> resultList = productRepository.getAll();
+        List<Product> listAfterFilters = productRepository.getAll();
 
-        if (name.isPresent()) resultList = productRepository.orderByName(name.get());
+        if (name.isPresent()) listAfterFilters = productRepository.filterByName(name.get());
 
-        if (category.isPresent()) resultList = productRepository.filterByCategory(category.get());
+        if (category.isPresent()) listAfterFilters = productRepository.filterByCategory(category.get());
 
-        if (brand.isPresent()) resultList = productRepository.filterByBrand(brand.get());
+        if (brand.isPresent()) listAfterFilters = productRepository.filterByBrand(brand.get());
 
-        if (price.isPresent()) resultList = productRepository.orderByPrice(price.get());
+        if (price.isPresent()) listAfterFilters = productRepository.filterByPrice(price.get());
 
-        if (freeShipping.isPresent()) resultList = productRepository.filterByShipping(freeShipping.get());
+        if (freeShipping.isPresent()) listAfterFilters = productRepository.filterByShipping(freeShipping.get());
 
-        if (prestige.isPresent()) resultList =productRepository.filterByPrestige(prestige.get());
+        if (prestige.isPresent()) listAfterFilters =productRepository.filterByPrestige(prestige.get());
 
-        return ProductDTO.convert(resultList);
+        return productsOrderBy(order, listAfterFilters);
+    }
+
+    public List<ProductDTO> productsOrderBy(Optional<Integer> order, List<Product> listAfterFilters) {
+        List<Product> listAfterOrder = listAfterFilters;
+
+        if (order.isPresent()) listAfterOrder = productRepository.orderByName(order.get());
+
+        return ProductDTO.convert(listAfterOrder);
     }
 
     public List<Product> returnProductsInStock(List<CompraItem> itemsList){

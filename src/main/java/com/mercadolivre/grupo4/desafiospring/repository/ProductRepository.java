@@ -6,6 +6,7 @@ import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import org.springframework.stereotype.Repository;
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -52,6 +53,8 @@ public class ProductRepository implements IProductRepository {
             Comparator<Product> comparator = Comparator.comparing(Product::getName);
             ordered.sort(comparator.reversed());
             return ordered;
+        } else {
+            orderByPrice(order);
         }
         return ordered;
     }
@@ -67,6 +70,16 @@ public class ProductRepository implements IProductRepository {
         return ordered;
     }
 
+    public List<Product> filterByName(String name) {
+        return this.getAll().stream()
+                .filter(product -> product.getName().equals(name)).collect(Collectors.toList());
+    }
+
+    public List<Product> filterByPrice(BigDecimal price) {
+        return this.getAll().stream()
+                .filter(product -> product.getPrice().equals(price)).collect(Collectors.toList());
+    }
+
     public List<Product> filterByShipping(Boolean freeShipping) {
         return this.getAll().stream()
                 .filter(product -> product.getFreeShipping().equals(freeShipping)).collect(Collectors.toList());
@@ -79,12 +92,12 @@ public class ProductRepository implements IProductRepository {
 
     public List<Product> filterByBrand(String brand) {
         return this.getAll().stream()
-                .filter(product -> product.getCategory().equals(brand)).collect(Collectors.toList());
+                .filter(product -> product.getBrand().equals(brand)).collect(Collectors.toList());
     }
 
     public List<Product> filterByPrestige(String prestige) {
         return this.getAll().stream()
-                .filter(product -> product.getCategory().equals(prestige)).collect(Collectors.toList());
+                .filter(product -> product.getPrestige().equals(prestige)).collect(Collectors.toList());
     }
 
     @Override

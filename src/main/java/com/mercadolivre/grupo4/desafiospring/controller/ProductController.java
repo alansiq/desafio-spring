@@ -28,16 +28,17 @@ public class ProductController {
     }
 
     @GetMapping("api/v1/products")
-    public ResponseEntity<List<ProductDTO>> getProducts(@RequestParam(required = false) Optional<Integer> name ,
-                                                                    @RequestParam(required = false) Optional<String> category,
-                                                                    @RequestParam(required = false) Optional<String> brand,
-                                                                    @RequestParam(required = false) Optional<Integer> price,
-                                                                    @RequestParam(required = false) Optional<Boolean> freeShipping,
-                                                                    @RequestParam(required = false) Optional<String> prestige
-                                                                    )
+    public ResponseEntity<List<ProductDTO>> getProducts(@RequestParam(required = false) Optional<String> name ,
+                                                        @RequestParam(required = false) Optional<String> category,
+                                                        @RequestParam(required = false) Optional<String> brand,
+                                                        @RequestParam(required = false) Optional<BigDecimal> price,
+                                                        @RequestParam(required = false) Optional<Boolean> freeShipping,
+                                                        @RequestParam(required = false) Optional<String> prestige,
+                                                        @RequestParam(required = false) Optional<Integer> order
+                                                        )
     {
 
-        List<ProductDTO> result = productService.productsFilteredBy(name, category, brand, price, freeShipping, prestige);
+        List<ProductDTO> result = productService.productsFilterBy(name, category, brand, price, freeShipping, prestige, order);
 
         return ResponseEntity.ok().body(result);
     }
