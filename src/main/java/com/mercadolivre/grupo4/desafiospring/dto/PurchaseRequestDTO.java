@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PurchaseRequestDTO implements Serializable {
-    private Map<String,List<CompraItem>> articlesPurchaseRequest;
+    Map<String,List<CompraItem>> articlesPurchaseRequest;
 
     public PurchaseRequestDTO(Map<String,List<CompraItem>> purchaseRequest) {
         this.articlesPurchaseRequest = new HashMap<>();

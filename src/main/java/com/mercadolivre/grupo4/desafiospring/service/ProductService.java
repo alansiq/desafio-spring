@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.Comparator;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 
@@ -85,7 +86,7 @@ public class ProductService {
     }
 
     public void verifyQuantityInStock(List<CompraItem> itemsList){
-        List<Product> stock = productRepository.get();
+        List<Product> stock = productRepository.getAll();
         StringBuilder errors = new StringBuilder();
         for (Product x : stock) {
             for (CompraItem p : itemsList){
@@ -98,6 +99,8 @@ public class ProductService {
                 }
             }
         }
-        throw new ProductQuantityDoesNotExistException(errors.toString());
+       if(!errors.toString().isEmpty()){
+           throw new ProductQuantityDoesNotExistException(errors.toString());
+       }
     }
 }

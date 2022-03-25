@@ -130,10 +130,8 @@ public class ProductRepository implements IProductRepository {
         Optional<Product> result = allResult.stream().filter(product -> product.getProductId().equals(id)).findFirst();
         if(result.isPresent()){
             return result.get();
-        }else{
+        } else {
             throw new ProductDoesNotExistException("Algum produto informado não existe em nossos servidores!");
         }
-
     }
-
 }

@@ -13,7 +13,7 @@ public class ProductDTO implements Serializable {
 
     private Long productId;
     private String name;
-    private int quantity;
+    private Integer quantity;
     private BigDecimal price;
 
     public ProductDTO (Product product) {

@@ -2,15 +2,17 @@ package com.mercadolivre.grupo4.desafiospring.dto;
 
 import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@NoArgsConstructor
 @Getter
 public class TicketDTO {
 
-    private Map<String,Object> ticket;
+    private Map<String,Object> ticket = new HashMap<>();
 
     public TicketDTO(Long id, List<Product> list, Long total) {
         ticket = new HashMap<>();
@@ -19,14 +21,9 @@ public class TicketDTO {
         ticket.put("total",total);
     }
 
-    public TicketDTO() {
-        ticket = new HashMap<>();
-    }
-
     public void setID (Long id){
         ticket.put("id",id);
     }
-
     public void setArticles(List<Product> list){
         ticket.put("articles", list);
     }

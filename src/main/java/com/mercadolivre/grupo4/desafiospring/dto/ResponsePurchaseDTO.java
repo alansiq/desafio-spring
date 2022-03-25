@@ -7,7 +7,7 @@ import java.util.Map;
 
 @Getter
 public class ResponsePurchaseDTO {
-    private Map<String,TicketDTO> ticket;
+    Map<String,TicketDTO> ticket;
 
     public ResponsePurchaseDTO(TicketDTO ticket) {
         this.ticket = new HashMap<>();

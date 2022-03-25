@@ -10,12 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Optional;
 
 @Validated
@@ -56,19 +54,18 @@ public class ProductController {
 
     @PostMapping (path = "/api/v1/purchase-request")
     @ResponseBody
-    public ResponseEntity<ResponsePurchaseDTO> findByCategory(@RequestBody Map<String,List<CompraItem>> purchaseRequest){
+    public ResponseEntity<ResponsePurchaseDTO> purchase(@RequestBody Map<String,List<CompraItem>> purchaseRequest){
         PurchaseRequestDTO purchaseRequestDTO = new PurchaseRequestDTO(purchaseRequest);
         List<CompraItem> itemsList = purchaseRequestDTO.getCompraItem();
 
         try {
             ResponsePurchaseDTO response = productService.assemblePurchaseDTO(itemsList);
-            System.out.println(response);
             return new ResponseEntity(response,HttpStatus.OK);
-        } catch (ProductDoesNotExistException E){
+        }
+        catch (ProductDoesNotExistException E){
             return  new ResponseEntity(E.getMessage(),HttpStatus.NOT_FOUND);
         } catch (ProductQuantityDoesNotExistException E) {
             return new ResponseEntity(E.getMessage(), HttpStatus.BAD_REQUEST);
         }
-
     }
 }
