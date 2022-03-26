@@ -8,9 +8,9 @@ import com.mercadolivre.grupo4.desafiospring.entity.Product;
 import com.mercadolivre.grupo4.desafiospring.exception.ProductDoesNotExistException;
 import com.mercadolivre.grupo4.desafiospring.exception.ProductQuantityDoesNotExistException;
 import com.mercadolivre.grupo4.desafiospring.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -36,17 +36,17 @@ public class ProductService {
     {
         List<Product> listAfterFilters = productRepository.getAll();
 
-        if (name.isPresent()) listAfterFilters = productRepository.filterByName(name.get());
+        if (name.isPresent()) listAfterFilters = this.filterByName(name.get(), listAfterFilters);
 
-        if (category.isPresent()) listAfterFilters = productRepository.filterByCategory(category.get());
+        if (category.isPresent()) listAfterFilters = this.filterByCategory(category.get(), listAfterFilters);
 
-        if (brand.isPresent()) listAfterFilters = productRepository.filterByBrand(brand.get());
+        if (brand.isPresent()) listAfterFilters = this.filterByBrand(brand.get(), listAfterFilters);
 
-        if (price.isPresent()) listAfterFilters = productRepository.filterByPrice(price.get());
+        if (price.isPresent()) listAfterFilters = this.filterByPrice(price.get(), listAfterFilters);
 
-        if (freeShipping.isPresent()) listAfterFilters = productRepository.filterByShipping(freeShipping.get());
+        if (freeShipping.isPresent()) listAfterFilters = this.filterByShipping(freeShipping.get(), listAfterFilters);
 
-        if (prestige.isPresent()) listAfterFilters =productRepository.filterByPrestige(prestige.get());
+        if (prestige.isPresent()) listAfterFilters =this.filterByPrestige(prestige.get(), listAfterFilters);
 
         return productsOrderBy(order, listAfterFilters);
     }
@@ -54,7 +54,7 @@ public class ProductService {
     public List<ProductDTO> productsOrderBy(Optional<Integer> order, List<Product> listAfterFilters) {
         List<Product> listAfterOrder = listAfterFilters;
 
-        if (order.isPresent()) listAfterOrder = productRepository.orderByName(order.get());
+        if (order.isPresent()) listAfterOrder = this.orderByName(order.get(), listAfterFilters);
       
         return ProductDTO.convert(listAfterOrder);
     }
@@ -97,5 +97,60 @@ public class ProductService {
             }
         }
        if(!errors.toString().isEmpty()) throw new ProductQuantityDoesNotExistException(errors.toString());
+    }
+
+    // TODO: 26/03/22 FIX METHODS BELOW
+
+    public List<Product> orderByName(Integer order, List<Product> listAfterFilters){
+        List<Product> ordered = listAfterFilters.stream()
+                .sorted(Comparator.comparing(Product::getName)).collect(Collectors.toList());
+        if (order == 1) {
+            Comparator<Product> comparator = Comparator.comparing(Product::getName);
+            ordered.sort(comparator.reversed());
+        } else {
+            ordered = orderByPrice(order, ordered);
+        }
+        return ordered;
+    }
+
+    public List<Product> orderByPrice(Integer order, List<Product> listAfterFilters){
+        List<Product> ordered = listAfterFilters.stream()
+                .sorted(Comparator.comparing(Product::getPrice)).collect(Collectors.toList());
+        if (order == 3) {
+            Comparator<Product> comparator = Comparator.comparing(Product::getPrice);
+            ordered.sort(comparator.reversed());
+            return ordered;
+        }
+        return ordered;
+    }
+
+    public List<Product> filterByName(String name, List<Product> listAfterFilters) {
+        return listAfterFilters.stream()
+                .filter(product -> product.getName().equals(name)).collect(Collectors.toList());
+    }
+
+    public List<Product> filterByPrice(BigDecimal price, List<Product> listAfterFilters) {
+        return listAfterFilters.stream()
+                .filter(product -> product.getPrice().equals(price)).collect(Collectors.toList());
+    }
+
+    public List<Product> filterByShipping(Boolean freeShipping, List<Product> listAfterFilters) {
+        return listAfterFilters.stream()
+                .filter(product -> product.getFreeShipping().equals(freeShipping)).collect(Collectors.toList());
+    }
+
+    public List<Product> filterByCategory(String category, List<Product> listAfterFilters) {
+        return listAfterFilters.stream()
+                .filter(product -> product.getCategory().equals(category)).collect(Collectors.toList());
+    }
+
+    public List<Product> filterByBrand(String brand, List<Product> listAfterFilters) {
+        return listAfterFilters.stream()
+                .filter(product -> product.getBrand().equals(brand)).collect(Collectors.toList());
+    }
+
+    public List<Product> filterByPrestige(String prestige, List<Product> listAfterFilters) {
+        return listAfterFilters.stream()
+                .filter(product -> product.getPrestige().equals(prestige)).collect(Collectors.toList());
     }
 }

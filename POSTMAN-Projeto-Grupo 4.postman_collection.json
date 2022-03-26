@@ -1,0 +1,134 @@
+{
+	"info": {
+		"_postman_id": "c6fb121a-e008-4cc8-a0ed-51bcae46aad9",
+		"name": "Projeto - Grupo 4",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Listagem de produtos / Listar produtos com filtros",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/api/v1/products?category=Esportes&order=3",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"products"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "Esportes"
+						},
+						{
+							"key": "freeShipping",
+							"value": "true",
+							"disabled": true
+						},
+						{
+							"key": "brand",
+							"value": "FORTGPRO",
+							"disabled": true
+						},
+						{
+							"key": "price",
+							"value": "1.800",
+							"disabled": true
+						},
+						{
+							"key": "prestige",
+							"value": "****",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "Chuteira",
+							"disabled": true
+						},
+						{
+							"key": "order",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Adicionar lista de produtos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"productId\": 15,\n    \"name\": \"Curso de Bitcoin do Kenyo\",\n    \"category\": \"Cursos\",\n    \"brand\": \"Kenyo Enterprises\",\n    \"price\": 1500,\n    \"quantity\": 5,\n    \"freeShipping\": true,\n    \"prestige\": \"*****\"\n  },\n    {\n    \"productId\": 16,\n    \"name\": \"Kit de Poker Profissional do Mauri\",\n    \"category\": \"Esportes\",\n    \"brand\": \"Mauri Esportes\",\n    \"price\": 2500,\n    \"quantity\": 5,\n    \"freeShipping\": true,\n    \"prestige\": \"*****\"\n  },\n      {\n    \"productId\": 17,\n    \"name\": \"Playlist da Joice\",\n    \"category\": \"Música\",\n    \"brand\": \"Joice Records\",\n    \"price\": 300,\n    \"quantity\": 5,\n    \"freeShipping\": true,\n    \"prestige\": \"*****\"\n  },\n        {\n    \"productId\": 18,\n    \"name\": \"Kit Apresentação onboarding da Michelle\",\n    \"category\": \"Software\",\n    \"brand\": \"Michelle\",\n    \"price\": 500,\n    \"quantity\": 5,\n    \"freeShipping\": false,\n    \"prestige\": \"*****\"\n  }\n\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/products",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar pedido de compra",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"productId\": 15,\n    \"name\": \"Parafusadeira Mercadolivre\",\n    \"category\": \"teste\",\n    \"brand\": \"Marca boa\",\n    \"price\": 500,\n    \"quantity\": 5,\n    \"freeShipping\": true,\n    \"prestige\": \"*\"\n  }\n\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/api/v1/product",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"v1",
+						"product"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
