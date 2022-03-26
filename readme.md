@@ -20,6 +20,10 @@ Separamos todos os requistos da aplicação em tasks. Com o auxílio do Trello, 
 ![img.png](assets/img.png)
 
 
-## Sobre o desenvolvimento da aplicação
+## Executando o projeto
+Disponibilizamos uma coleção do POSTMAN com todos os endpoints desenvolvidos em nossa aplicação. Você pode realizar o download [clicando aqui](https://github.com/alansiq/desafio-spring/blob/master/POSTMAN-Projeto-Grupo%204.postman_collection.json). 
 
-> Essa parte está em desenvolvimento - assim que concluído o desafio compartilharemos detalhes do funcionamento da nossa solução assim como um guia de como executa-la.
+Após instalar todas as dependências com auxílio da IDE (utilizamos MAVEN) você poderá executar o projeto:
+Execute o projeto a partir da Classe "DesafioSpringApplication" com o método Main.
+
+Agora você já pode realizar chamadas para todos os endpoints disponibilizados em nossa collection do POSTMAN.
