@@ -17,17 +17,15 @@ import java.util.stream.Collectors;
 public class ProductRepository implements IProductRepository {
     private final String JSON_FILE = "src/main/resources/products.json";
 
-    private boolean save(List<Product> productList) {
+    private void save(List<Product> productList) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         try {
             objectMapper.writeValue(new File(JSON_FILE), productList);
-            return true;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
     @Override
@@ -39,8 +37,6 @@ public class ProductRepository implements IProductRepository {
             ObjectMapper objectMapper = new ObjectMapper();
             personagens = objectMapper.readValue(mapData, Product[].class);
             result = new ArrayList<>(Arrays.asList(personagens));
-        } catch (JsonMappingException ex) {
-            ex.printStackTrace();
         } catch (IOException ex) {
             ex.printStackTrace();
         }

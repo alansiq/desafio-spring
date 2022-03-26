@@ -26,7 +26,6 @@ import java.util.Optional;
 @Validated
 @RestController
 public class ProductController {
-    @Autowired
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
@@ -50,7 +49,7 @@ public class ProductController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping("/api/v1/product")
+    @PostMapping("/api/v1/products")
     public ResponseEntity<List<ProductDTO>> insertProduct(@Valid @RequestBody List<Product> productList){
         boolean success = productService.save(productList);
         if (success) {
@@ -67,7 +66,7 @@ public class ProductController {
 
         try {
             ResponsePurchaseDTO response = productService.assemblePurchaseDTO(itemsList);
-            return new ResponseEntity(response,HttpStatus.OK);
+            return ResponseEntity.ok().body(response);
         }
         catch (ProductDoesNotExistException E){
             return  new ResponseEntity(E.getMessage(),HttpStatus.NOT_FOUND);

@@ -18,8 +18,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
-    @Autowired
-    private ProductRepository productRepository;
+
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     public boolean save(List<Product> productList) {
         return productRepository.addList(productList);
@@ -87,9 +91,7 @@ public class ProductService {
             for (CompraItem p : itemsList){
                 if(x.getProductId().equals(p.getProductId())){
                     if(p.getQuantity() > x.getQuantity()){
-                        errors.append("Quantidade solicitada do "
-                                + p.getName() + " não disponível. "
-                                + "Total em Estoque: " + x.getQuantity() + "\n");
+                        errors.append("Quantidade solicitada do ").append(p.getName()).append(" não disponível. ").append("Total em Estoque: ").append(x.getQuantity()).append("\n");
                     }
                 }
             }
